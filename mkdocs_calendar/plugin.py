@@ -1,6 +1,5 @@
 ################################################################################
-# @file        : plugin.py
-# @brief       : Today Plugin for MkDocs
+# @brief       : Calendar plugin for MkDocs
 # @author      : Jacques Supcik <jacques.supcik@hefr.ch>
 # @date        : 14. June 2023
 # ------------------------------------------------------------------------------
@@ -8,10 +7,9 @@
 #                Haute école d'ingénierie et d'architecture de Fribourg
 #                Informatique et Systèmes de Communication
 # @attention   : SPDX-License-Identifier: MIT OR Apache-2.0
-# ------------------------------------------------------------------------------
-# @details
-# Today Plugin for MkDocs
 ################################################################################
+
+"""Calendar plugin for MkDocs"""
 
 import logging
 import time
@@ -25,21 +23,24 @@ from mkdocs.plugins import BasePlugin
 from pytz import timezone
 
 logger = logging.getLogger("mkdocs.plugins." + __name__)
-logTag = "[calendar] -"
+TAG = "[calendar] -"
 
 
 class CalendarPluginConfig(BaseConfig):
+    """Configuration options for the calendar plugin."""
+
     start = c.Type(date)
     end = c.Type(date)
     tz = c.Choice(pytz.all_timezones, default="Europe/Zurich")
     academic_weeks_off = c.Type(list, default=[])
 
 
+# pylint: disable-next=too-few-public-methods
 class CalendarPlugin(BasePlugin[CalendarPluginConfig]):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    """Calendar plugin for MkDocs"""
 
     def on_config(self, config):
+        """Validate the configuration and add calendar entries to the config."""
         now = datetime.fromtimestamp(time.time(), tz=timezone(self.config["tz"]))
 
         start_date = self.config["start"]
@@ -47,12 +48,12 @@ class CalendarPlugin(BasePlugin[CalendarPluginConfig]):
 
         academic_week = ((now.date() - start_date).days) // 7 + 1
         try:
-            for i in [i for i in self.config["academic_weeks_off"]]:
+            for i in self.config["academic_weeks_off"]:
                 if academic_week >= i:
                     academic_week -= 1
 
-        except Exception as e:
-            raise PluginError(f"{logTag} : {e}")
+        except Exception as e:  # pylint: disable=invalid-name
+            raise PluginError(f"{TAG} : {e}") from e
 
         cal = {
             "start": start_date,
