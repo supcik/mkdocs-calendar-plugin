@@ -1,0 +1,16 @@
+site_name: Calendar Plugin Test
+site_description: Test for Calendar Plugin
+docs_dir: docs
+theme: readthedocs
+
+nav:
+  - Main: index.md
+
+plugins:
+  - search
+  - calendar:
+      academic_weeks_off: [15]
+      start: 2023-02-20
+      end: 2023-06-23
+      tz: Europe/Zurich
+  - macros
