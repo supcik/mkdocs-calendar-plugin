@@ -1,9 +1,9 @@
 ################################################################################
 # @brief       : Calendar plugin for MkDocs
 # @author      : Jacques Supcik <jacques.supcik@hefr.ch>
-# @date        : 14. June 2023
+# @date        : 17. June 2023
 # ------------------------------------------------------------------------------
-# @copyright   : Copyright (c) 2022 HEIA-FR / ISC
+# @copyright   : Copyright (c) 2023 HEIA-FR / ISC
 #                Haute école d'ingénierie et d'architecture de Fribourg
 #                Informatique et Systèmes de Communication
 # @attention   : SPDX-License-Identifier: MIT OR Apache-2.0
@@ -11,10 +11,12 @@
 
 """Calendar plugin for MkDocs"""
 
+import collections.abc
 import logging
 import time
 from datetime import date, datetime
 
+import jinja2
 import pytz
 from mkdocs.config import config_options as c
 from mkdocs.config.base import Config as BaseConfig
@@ -32,12 +34,44 @@ class CalendarPluginConfig(BaseConfig):
     start = c.Type(date)
     end = c.Type(date)
     tz = c.Choice(pytz.all_timezones, default="Europe/Zurich")
-    academic_weeks_off = c.Type(list, default=[])
+    weeks_off = c.Type(list, default=[])
+    config_keys_to_fix = c.Type(list, default=[])
+    extra_key = c.Type(str, default="cal")
 
 
 # pylint: disable-next=too-few-public-methods
 class CalendarPlugin(BasePlugin[CalendarPluginConfig]):
     """Calendar plugin for MkDocs"""
+
+    def _fix_item(self, key, config, jinja_env):
+        subconfig = config
+        path = key.split(".")
+        for stem in path[:-1]:
+            if stem not in subconfig:
+                logger.warning("%s Key '%s' not found in config... skipping", TAG, key)
+                return
+            if not isinstance(subconfig[stem], collections.abc.Mapping):
+                logger.warning(
+                    "%s - Invalid key '{%s}' [%s]... skipping",
+                    TAG,
+                    key,
+                    type(subconfig[stem]),
+                )
+                return
+            subconfig = subconfig[stem]
+
+        if path[-1] not in subconfig:
+            logger.warning("%s - Key '{%s}' not found in config... skipping", TAG, key)
+            return
+
+        orig = subconfig[path[-1]]
+        template = jinja_env.from_string(orig)
+
+        try:
+            subconfig[path[-1]] = template.render(today=self.today)
+        except jinja2.TemplateError as e:  # pylint: disable=invalid-name
+            logger.warning("%s - Failed to render '%s': %s", TAG, key, e)
+            subconfig[path[-1]] = orig
 
     def on_config(self, config):
         """Validate the configuration and add calendar entries to the config."""
@@ -48,7 +82,7 @@ class CalendarPlugin(BasePlugin[CalendarPluginConfig]):
 
         academic_week = ((now.date() - start_date).days) // 7 + 1
         try:
-            for i in self.config["academic_weeks_off"]:
+            for i in self.config["weeks_off"]:
                 if academic_week >= i:
                     academic_week -= 1
 
@@ -59,6 +93,7 @@ class CalendarPlugin(BasePlugin[CalendarPluginConfig]):
             "start": start_date,
             "end": end_date,
             "now": now,
+            "today": now.date(),
             "weekday": now.weekday(),
             "week_number": now.isocalendar()[1],
             "iso_weekday": now.isoweekday(),
@@ -71,5 +106,9 @@ class CalendarPlugin(BasePlugin[CalendarPluginConfig]):
         }
 
         config.extra["cal"] = cal
+
+        env = jinja2.Environment()
+        for key in self.config.config_keys_to_fix:
+            self._fix_item(key, config, env)
 
         return config

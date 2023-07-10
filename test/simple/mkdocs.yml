@@ -9,7 +9,7 @@ nav:
 plugins:
   - search
   - calendar:
-      academic_weeks_off: [15]
+      weeks_off: [15]
       start: 2023-02-20
       end: 2023-06-23
       tz: Europe/Zurich
