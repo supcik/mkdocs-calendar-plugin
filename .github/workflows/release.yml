@@ -31,7 +31,8 @@ jobs:
         run: |
           poetry install --with=dev
       - name: Install and run pre-commit hooks
-        uses: pre-commit/action@v3.0.0
+        run: |
+          poetry run pre-commit run --all-files
       - name: Build package
         run: |
           poetry build
