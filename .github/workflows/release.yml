@@ -29,8 +29,8 @@ jobs:
           key: ${{ runner.os }}-venv-${{ hashFiles('**/poetry.lock') }}
       - name: Install dependencies
         run: |
-          poetry install
-      - name: Install annd run pre-commit hooks
+          poetry install --with=dev
+      - name: Install and run pre-commit hooks
         uses: pre-commit/action@v3.0.0
       - name: Build package
         run: |
