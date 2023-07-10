@@ -1,4 +1,7 @@
-on: [push]
+on:
+  push:
+  pull_request:
+
 jobs:
   pypi-build-and-publish:
     name: Build and upload release to PyPI
@@ -27,6 +30,8 @@ jobs:
       - name: Install dependencies
         run: |
           poetry install
+      - name: Install annd run pre-commit hooks
+        uses: pre-commit/action@v3.0.0
       - name: Build package
         run: |
           poetry build
