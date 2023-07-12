@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mkdocs-calendar-plugin"
-version = "0.2.1"
+version = "0.2.2"
 description = "An MkDocs plugin to ..."
 authors = ["Jacques Supcik <jacques.supcik@hefr.ch>"]
 repository = "https://github.com/supcik/mkdocs-today-plugin"
