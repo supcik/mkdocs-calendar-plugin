@@ -31,7 +31,7 @@ class CalendarPluginConfig(BaseConfig):
 
     start = c.Optional(c.Type(date))
     end = c.Optional(c.Type(date))
-    tz = c.Choice(pytz.all_timezones, default="Europe/Zurich")
+    tz = c.Choice(pytz.all_timezones, default="UTC")
     week_names = c.Type(list, default=[])
     extra_key = c.Type(str, default="cal")
 
@@ -75,8 +75,8 @@ class CalendarPlugin(BasePlugin[CalendarPluginConfig]):
                 cal["academic_week_name"] = None
 
             cal["start"] = start_date
-            cal["delta"] = (now.date() - start_date).days
-            cal["delta_w"] = ((now.date() - start_date).days) / 7
+            cal["elapsed"] = (now.date() - start_date).days
+            cal["elapsed_weeks"] = cal["elapsed"] / 7
 
             cal["aw"] = cal["academic_week"]
             cal["awn"] = cal["academic_week_name"]
@@ -84,6 +84,7 @@ class CalendarPlugin(BasePlugin[CalendarPluginConfig]):
         if end_date is not None:
             cal["end"] = end_date
             cal["remaining"] = (end_date - now.date()).days
+            cal["remaining_weeks"] = cal["remaining"] / 7
 
         config.extra[self.config["extra_key"]] = cal
 

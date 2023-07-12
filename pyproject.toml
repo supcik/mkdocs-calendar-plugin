@@ -1,9 +1,9 @@
 [tool.poetry]
 name = "mkdocs-calendar-plugin"
-version = "0.2.2"
-description = "An MkDocs plugin to ..."
+version = "0.3.0"
+description = "An MkDocs plugin to expose calendar information to the 'extra' configuration variable."
 authors = ["Jacques Supcik <jacques.supcik@hefr.ch>"]
-repository = "https://github.com/supcik/mkdocs-today-plugin"
+repository = "https://github.com/supcik/mkdocs-calendar-plugin"
 license = "Apache-2"
 readme = "README.md"
 packages = [{ include = "mkdocs_calendar" }]
