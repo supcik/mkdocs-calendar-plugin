@@ -13,12 +13,12 @@
 
 import logging
 import time
+from collections.abc import Sequence
 from datetime import date, datetime
 
 import pytz
 from mkdocs.config import config_options as c
 from mkdocs.config.base import Config as BaseConfig
-from mkdocs.exceptions import PluginError
 from mkdocs.plugins import BasePlugin
 from pytz import timezone
 
@@ -32,7 +32,7 @@ class CalendarPluginConfig(BaseConfig):
     start = c.Optional(c.Type(date))
     end = c.Optional(c.Type(date))
     tz = c.Choice(pytz.all_timezones, default="Europe/Zurich")
-    weeks_off = c.Type(list, default=[])
+    week_names = c.Type(list, default=[])
     extra_key = c.Type(str, default="cal")
 
 
@@ -56,7 +56,7 @@ class CalendarPlugin(BasePlugin[CalendarPluginConfig]):
 
         start_date = self.get_xconfig(config, "start")
         end_date = self.get_xconfig(config, "end")
-        weeks_off = self.get_xconfig(config, "weeks_off") or []
+        week_names = self.get_xconfig(config, "week_names") or []
         cal = {
             "now": now,
             "today": now.date(),
@@ -66,19 +66,20 @@ class CalendarPlugin(BasePlugin[CalendarPluginConfig]):
         }
 
         if start_date is not None:
-            academic_week = ((now.date() - start_date).days) // 7 + 1
-            try:
-                for i in weeks_off:
-                    if academic_week >= i:
-                        academic_week -= 1
-            except Exception as e:  # pylint: disable=invalid-name
-                raise PluginError(f"{TAG} : {e}") from e
+            # pylint: disable-next=invalid-name
+            aw = ((now.date() - start_date).days) // 7
+            cal["academic_week"] = aw + 1
+            if isinstance(week_names, Sequence) and 0 <= aw < len(week_names):
+                cal["academic_week_name"] = week_names[aw]
+            else:
+                cal["academic_week_name"] = None
 
             cal["start"] = start_date
             cal["delta"] = (now.date() - start_date).days
             cal["delta_w"] = ((now.date() - start_date).days) / 7
-            cal["academic_week"] = academic_week
-            cal["aw"] = academic_week
+
+            cal["aw"] = cal["academic_week"]
+            cal["awn"] = cal["academic_week_name"]
 
         if end_date is not None:
             cal["end"] = end_date

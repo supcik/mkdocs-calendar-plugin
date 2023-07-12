@@ -10,8 +10,8 @@ repos:
       - id: isort
         name: isort
         entry: isort
-        language: system
-        types: [python]
+        language: python
+        pass_filenames: false
         args: ["."]
   - repo: https://github.com/psf/black
     rev: 22.10.0
@@ -21,7 +21,7 @@ repos:
     hooks:
       - id: pylint
         name: pylint
-        entry: pylint
+        entry: poetry run pylint
         language: system
         types: [python]
         args: [

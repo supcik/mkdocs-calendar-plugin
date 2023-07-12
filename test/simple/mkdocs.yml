@@ -8,9 +8,28 @@ nav:
 
 extra:
   calendar_plugin:
-    start: 2023-02-20
+    #start: 2023-02-20
+    start: 2023-05-15
     end: 2023-06-23
-    weeks_off: [15]
+    week_names:
+      - P1
+      - P2
+      - P3
+      - P4
+      - P5
+      - P6
+      - P7
+      - P8
+      - null
+      - P9
+      - P10
+      - P11
+      - P12
+      - P13
+      - P14
+      - P15
+      - P16
+      - P17
 
 plugins:
   - search
