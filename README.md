@@ -58,7 +58,9 @@ The plugin supports the following configuration options:
 | `tz`         | The timezone to use for the calendar. Defaults to `UTC`.                 |
 | `start`      | The start date of the calendar.                                          |
 | `end`        | The end date of the calendar.                                            |
+| `today`      | The date to use as today (used mainly for testing). Defaults to `now`.   |
 | `week_names` | The names of the weeks. Defaults to `[]` (no week names).                |
+| `plan`       | The plan to use for the calendar. Defaults to `{}` (no plan).            |
 | `extra_key`  | The key to use in the `extra` configuration variable. Defaults to `cal`. |
 
 ## Extra configuration variable
@@ -82,3 +84,16 @@ The plugin exposes the following information in the `extra.<extra_key>` configur
 | `end`                | A copy of `extra.<extra_key>.end` _(only if `extra.<extra_key>.end` is defined)_                                                               |
 | `remaining`          | The remaining days to `extra.<extra_key>.end` _(only if `extra.<extra_key>.end` is defined)_                                                   |
 | `remaining_weeks`    | The remaining weeks to `extra.<extra_key>.end` _(only if `extra.<extra_key>.end` is defined)_                                                  |
+
+The plugin also exposes the information compited from the plan. A typical plan looks like this:
+
+```yaml
+plan:
+  P1: [s01, ex01, tp01]
+  P2: [sol1, s02, ex02, tp02]
+```
+
+The keys of the plan (here above `P1` and `P2`) must exists
+in the `week_names` array (see above). The values of the plan
+are boolean variables that will be `True` if the corresponding week
+is the present week (or before) and `False` otherwise.

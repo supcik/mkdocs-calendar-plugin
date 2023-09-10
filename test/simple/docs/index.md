@@ -8,6 +8,9 @@ xvar:
 
 {{ cal }}
 
+Serie 1 : {{ cal.s01 }}
+Serie 2 : {{ cal.s02 }}
+
 {{ page.meta.xvar.bla }}
 
 {{ page.meta.xvar.blub }}

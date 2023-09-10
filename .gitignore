@@ -1,3 +1,5 @@
 /.venv
+/.ruff_cache
 /dist
+/test/*/site
 __pycache__
