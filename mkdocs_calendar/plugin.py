@@ -12,6 +12,7 @@
 """Calendar plugin for MkDocs"""
 
 import logging
+import os
 import time
 from collections.abc import Mapping, Sequence
 from datetime import date, datetime
@@ -42,7 +43,7 @@ class CalendarPluginConfig(BaseConfig):
 class CalendarPlugin(BasePlugin[CalendarPluginConfig]):
     """Calendar plugin for MkDocs"""
 
-    def get_xconfig(self, config, key):
+    def __get_xconfig(self, config, key):
         """Get the configuration value for the given key."""
         if "calendar_plugin" in config.extra:
             extra = config.extra["calendar_plugin"]
@@ -52,24 +53,31 @@ class CalendarPlugin(BasePlugin[CalendarPluginConfig]):
             return self.config[key]
         return None
 
-    def on_config(self, config):
-        """Validate the configuration and add calendar entries to the config."""
-        tz = self.get_xconfig(config, "tz")
-        forced_today = self.get_xconfig(config, "today")
-        if forced_today is None:
-            now = datetime.fromtimestamp(time.time(), tz=pytz.timezone(tz))
+    def __now(self, config):
+        """Return today's date."""
+        tz = self.__get_xconfig(config, "tz")
+        forced_today = None
+        ct = os.environ.get("CALENDAR_TODAY")
+        if ct is not None:
+            forced_today = datetime.strptime(ct, "%Y-%m-%d").date()
         else:
-            now = datetime(
+            forced_today = self.__get_xconfig(config, "today")
+        if forced_today is not None:
+            return datetime(
                 forced_today.year,
                 forced_today.month,
                 forced_today.day,
                 tzinfo=pytz.timezone(tz),
             )
+        return datetime.fromtimestamp(time.time(), tz=pytz.timezone(tz))
 
-        start_date = self.get_xconfig(config, "start")
-        end_date = self.get_xconfig(config, "end")
-        week_names = self.get_xconfig(config, "week_names") or []
-        plan = self.get_xconfig(config, "plan") or {}
+    def on_config(self, config):
+        """Validate the configuration and add calendar entries to the config."""
+        now = self.__now(config)
+        start_date = self.__get_xconfig(config, "start")
+        end_date = self.__get_xconfig(config, "end")
+        week_names = self.__get_xconfig(config, "week_names") or []
+        plan = self.__get_xconfig(config, "plan") or {}
 
         cal = {
             "now": now,

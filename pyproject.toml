@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mkdocs-calendar-plugin"
-version = "0.4.0"
+version = "0.4.1"
 description = "An MkDocs plugin to expose calendar information to the 'extra' configuration variable."
 authors = ["Jacques Supcik <jacques.supcik@hefr.ch>"]
 repository = "https://github.com/supcik/mkdocs-calendar-plugin"
@@ -42,5 +42,4 @@ build-backend = "poetry.core.masonry.api"
 calendar = "mkdocs_calendar.plugin:CalendarPlugin"
 
 [tool.ruff]
-# On top of the defaults (`E`, `F`), enable flake8-bugbear (`B`) and flake8-quotes (`Q`).
 select = ["E", "F", "B", "Q", "N", "I", "UP", "PL", "RUF", "C90"]
