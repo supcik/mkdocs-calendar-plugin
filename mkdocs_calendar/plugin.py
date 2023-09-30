@@ -17,6 +17,7 @@ import time
 from collections.abc import Mapping, Sequence
 from datetime import date, datetime
 
+import dateparser
 import pytz
 from mkdocs.config import config_options as c
 from mkdocs.config.base import Config as BaseConfig
@@ -59,7 +60,7 @@ class CalendarPlugin(BasePlugin[CalendarPluginConfig]):
         forced_today = None
         ct = os.environ.get("CALENDAR_TODAY")
         if ct is not None:
-            forced_today = datetime.strptime(ct, "%Y-%m-%d").date()
+            forced_today = dateparser.parse(ct).date()
         else:
             forced_today = self.__get_xconfig(config, "today")
         if forced_today is not None:
