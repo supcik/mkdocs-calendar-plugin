@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mkdocs-calendar-plugin"
-version = "0.4.4"
+version = "0.4.5"
 description = "An MkDocs plugin to expose calendar information to the 'extra' configuration variable."
 authors = ["Jacques Supcik <jacques.supcik@hefr.ch>"]
 repository = "https://github.com/supcik/mkdocs-calendar-plugin"
