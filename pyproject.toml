@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mkdocs-calendar-plugin"
-version = "0.4.3"
+version = "0.4.4"
 description = "An MkDocs plugin to expose calendar information to the 'extra' configuration variable."
 authors = ["Jacques Supcik <jacques.supcik@hefr.ch>"]
 repository = "https://github.com/supcik/mkdocs-calendar-plugin"
@@ -20,18 +20,18 @@ python = "^3.10"
 mkdocs = "^1.5.3"
 mkdocs-material = { version = "^9.5.9", optional = true }
 mkdocs-macros-plugin = { version = "^1.0.5", optional = true }
-pytz = "^2024.1"
+pytz = "^2025.1"
 dateparser = "^1.2.0"
 
 [tool.poetry.extras]
 test = ["mkdocs-material", "mkdocs-macros-plugin"]
 
 [tool.poetry.group.dev.dependencies]
-black = "^24.2.0"
+black = "^25.1.0"
 pylint = "^3.0.3"
-isort = "^5.13.2"
-pre-commit = "^3.6.1"
-ruff = "^0.2.1"
+isort = "^6.0.0"
+pre-commit = "^4.1.0"
+ruff = "^0.9.5"
 
 [build-system]
 requires = ["poetry-core"]
