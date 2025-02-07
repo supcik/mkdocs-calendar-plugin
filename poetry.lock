@@ -1290,4 +1290,4 @@ test = ["mkdocs-macros-plugin", "mkdocs-material"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "7b2d385b4b49cc52baa6000661414c758eafcd793b4a63323d86d46ce3eccf6a"
+content-hash = "69f156795fc64c44905641992548e6fbd4a8a72865ce4cd6de9cb93080a04893"
